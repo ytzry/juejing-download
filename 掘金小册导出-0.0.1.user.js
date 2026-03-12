@@ -49,10 +49,18 @@ const getMarkdownContent = async (sectionID) => {
    return data.section;
 };
 
+function complianceName(name) {
+	return name
+    .replace(/[\\/:*?"<>|]/g, "_")  // 替换非法字符
+    .replace(/^\.+/, "")            // 去掉开头的 .
+    .replace(/\s+/g, " ")           // 合并多余空格
+    .trim();                        // 去掉首尾空格
+}
+
 async function saveFile(directoryHandle, index, name, content) {
    try {
       // 创建文件
-      const fileName = `${index}、${name}.md`;
+      const fileName = `${index}、${complianceName(name)}.md`;
       const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
       
       // 创建可写流
